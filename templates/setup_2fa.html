@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Setup 2FA — SecureLogin{% endblock %}
+{% block content %}
+<div class="card card-wide">
+  <div class="card-header">
+    <span class="card-icon">📱</span>
+    <h1 class="card-title">Enable 2FA</h1>
+    <p class="card-sub">Scan the QR code with Google Authenticator or Authy</p>
+  </div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="alerts">
+        {% for cat, msg in messages %}
+          <div class="alert alert-{{ cat }}">{{ msg }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <div class="qr-wrap">
+    <img src="data:image/png;base64,{{ qr_b64 }}" width="200" height="200" alt="QR Code"/>
+  </div>
+
+  <p class="text-center text-sm text-muted mt-1">
+    Can't scan? Enter this secret manually:
+  </p>
+  <div class="secret-box">{{ secret }}</div>
+
+  <form method="POST" action="{{ url_for('setup_2fa') }}">
+    <div class="form-group">
+      <label for="code">Enter 6-digit code from your app</label>
+      <input type="number" id="code" name="code"
+             class="otp-input"
+             placeholder="000000"
+             minlength="6" maxlength="6"
+             required autofocus/>
+    </div>
+    <button type="submit" class="btn btn-primary">Verify & Enable 2FA →</button>
+  </form>
+
+  <div class="mt-2 text-center">
+    <a href="{{ url_for('dashboard') }}" class="link text-sm">← Back to Dashboard</a>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}SecureLogin{% endblock %}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0a0e1a;
+      --surface:   #111827;
+      --border:    #1f2d45;
+      --accent:    #3b82f6;
+      --accent-hi: #60a5fa;
+      --green:     #10b981;
+      --red:       #ef4444;
+      --yellow:    #f59e0b;
+      --text:      #e2e8f0;
+      --muted:     #64748b;
+      --mono:      'JetBrains Mono', monospace;
+      --sans:      'Inter', sans-serif;
+    }
+
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Nav ── */
+    nav {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-brand {
+      font-family: var(--mono);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--accent-hi);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+    }
+    .nav-brand::before { content: "🔐"; font-size: .9rem; }
+    .nav-links { display: flex; gap: 1rem; align-items: center; }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: .875rem;
+      font-weight: 500;
+      padding: .375rem .75rem;
+      border-radius: 6px;
+      transition: color .15s, background .15s;
+    }
+    .nav-links a:hover { color: var(--text); background: var(--border); }
+    .nav-links a.btn-sm {
+      background: var(--accent);
+      color: #fff;
+    }
+    .nav-links a.btn-sm:hover { background: var(--accent-hi); }
+
+    /* ── Main ── */
+    main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 2rem 1rem; }
+
+    /* ── Card ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 0 0 1px rgba(59,130,246,.05), 0 24px 48px rgba(0,0,0,.4);
+    }
+    .card-wide { max-width: 560px; }
+
+    .card-header { text-align: center; margin-bottom: 2rem; }
+    .card-icon {
+      font-size: 2.5rem;
+      display: block;
+      margin-bottom: 1rem;
+    }
+    .card-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: .375rem;
+    }
+    .card-sub { font-size: .875rem; color: var(--muted); }
+
+    /* ── Form ── */
+    .form-group { margin-bottom: 1.25rem; }
+    label {
+      display: block;
+      font-size: .8125rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+      margin-bottom: .5rem;
+    }
+    input[type="text"], input[type="email"],
+    input[type="password"], input[type="number"] {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: .75rem 1rem;
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: .9375rem;
+      outline: none;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(59,130,246,.15);
+    }
+    input::placeholder { color: var(--muted); }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+      padding: .75rem 1.5rem;
+      border-radius: 8px;
+      font-family: var(--sans);
+      font-size: .9375rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      text-decoration: none;
+      transition: opacity .15s, transform .1s;
+    }
+    .btn:active { transform: scale(.98); }
+    .btn-primary { background: var(--accent); color: #fff; width: 100%; }
+    .btn-primary:hover { opacity: .9; }
+    .btn-danger  { background: var(--red); color: #fff; }
+    .btn-danger:hover { opacity: .85; }
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* ── Alerts ── */
+    .alerts { margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: .5rem; }
+    .alert {
+      padding: .75rem 1rem;
+      border-radius: 8px;
+      font-size: .875rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: .625rem;
+    }
+    .alert-error   { background: rgba(239,68,68,.1);  border: 1px solid rgba(239,68,68,.25);  color: #fca5a5; }
+    .alert-success { background: rgba(16,185,129,.1); border: 1px solid rgba(16,185,129,.25); color: #6ee7b7; }
+    .alert-info    { background: rgba(59,130,246,.1); border: 1px solid rgba(59,130,246,.25); color: #93c5fd; }
+
+    /* ── Links ── */
+    .link { color: var(--accent-hi); text-decoration: none; font-weight: 500; }
+    .link:hover { text-decoration: underline; }
+    .text-center { text-align: center; }
+    .mt-1 { margin-top: .5rem; }
+    .mt-2 { margin-top: 1rem; }
+    .mt-3 { margin-top: 1.5rem; }
+    .text-sm { font-size: .875rem; }
+    .text-muted { color: var(--muted); }
+
+    /* ── Divider ── */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 1.5rem 0;
+      color: var(--muted);
+      font-size: .8125rem;
+    }
+    .divider::before, .divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── Badge ── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: .375rem;
+      padding: .25rem .75rem;
+      border-radius: 999px;
+      font-size: .75rem;
+      font-weight: 600;
+    }
+    .badge-green { background: rgba(16,185,129,.15); color: var(--green); border: 1px solid rgba(16,185,129,.3); }
+    .badge-red   { background: rgba(239,68,68,.15);  color: var(--red);   border: 1px solid rgba(239,68,68,.3); }
+    .badge-blue  { background: rgba(59,130,246,.15); color: var(--accent-hi); border: 1px solid rgba(59,130,246,.3); }
+
+    /* ── Dashboard grid ── */
+    .dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1.5rem 0; }
+    .stat-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+    .stat-label { font-size: .75rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+    .stat-value { font-size: 1.125rem; font-weight: 700; margin-top: .375rem; font-family: var(--mono); color: var(--text); }
+
+    .security-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: .75rem;
+    }
+    .security-row-info h4 { font-size: .9375rem; font-weight: 600; }
+    .security-row-info p  { font-size: .8125rem; color: var(--muted); margin-top: .2rem; }
+
+    /* ── QR block ── */
+    .qr-wrap {
+      background: #fff;
+      border-radius: 10px;
+      padding: 1rem;
+      display: inline-block;
+      margin: 1rem auto;
+      display: flex;
+      justify-content: center;
+    }
+    .qr-wrap img { border-radius: 4px; }
+
+    .secret-box {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: .75rem 1rem;
+      font-family: var(--mono);
+      font-size: .875rem;
+      color: var(--accent-hi);
+      text-align: center;
+      letter-spacing: .1em;
+      word-break: break-all;
+      margin: 1rem 0;
+    }
+
+    /* ── OTP input ── */
+    .otp-input {
+      font-family: var(--mono) !important;
+      font-size: 1.5rem !important;
+      text-align: center;
+      letter-spacing: .3em;
+    }
+
+    /* ── Password strength ── */
+    .strength-bar {
+      height: 4px;
+      border-radius: 2px;
+      background: var(--border);
+      margin-top: .5rem;
+      overflow: hidden;
+    }
+    .strength-fill {
+      height: 100%;
+      border-radius: 2px;
+      width: 0;
+      transition: width .3s, background .3s;
+    }
+    .strength-text { font-size: .75rem; margin-top: .375rem; color: var(--muted); }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      font-size: .8125rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+    }
+    footer span { color: var(--accent-hi); font-family: var(--mono); }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="{{ url_for('index') }}">SecureLogin</a>
+  <div class="nav-links">
+    {% if session.get('user_id') %}
+      <a href="{{ url_for('dashboard') }}">Dashboard</a>
+      <a href="{{ url_for('logout') }}" class="btn-sm">Logout</a>
+    {% else %}
+      <a href="{{ url_for('login') }}">Login</a>
+      <a href="{{ url_for('register') }}" class="btn-sm">Register</a>
+    {% endif %}
+  </div>
+</nav>
+
+<main>
+  <div style="width:100%;display:flex;justify-content:center;">
+    {% block content %}{% endblock %}
+  </div>
+</main>
+
+<footer>
+  Built with <span>bcrypt</span> · <span>TOTP 2FA</span> · <span>SQLite parameterised queries</span>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}Register — SecureLogin{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <span class="card-icon">🛡️</span>
+    <h1 class="card-title">Create Account</h1>
+    <p class="card-sub">Passwords are hashed with bcrypt (cost 12)</p>
+  </div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="alerts">
+        {% for cat, msg in messages %}
+          <div class="alert alert-{{ cat }}">
+            {{ '✗' if cat == 'error' else '✓' }} {{ msg }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <form method="POST" action="{{ url_for('register') }}" autocomplete="off">
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username"
+             placeholder="e.g. krish_06"
+             minlength="3" maxlength="20" required
+             pattern="[a-zA-Z0-9_]+"
+             title="Letters, numbers, underscores only"/>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email Address</label>
+      <input type="email" id="email" name="email"
+             placeholder="you@example.com" required/>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password"
+             placeholder="Min 8 chars, 1 uppercase, 1 number"
+             minlength="8" required oninput="checkStrength(this.value)"/>
+      <div class="strength-bar"><div class="strength-fill" id="sbar"></div></div>
+      <div class="strength-text" id="stxt">Enter a password</div>
+    </div>
+
+    <div class="form-group">
+      <label for="confirm_password">Confirm Password</label>
+      <input type="password" id="confirm_password" name="confirm_password"
+             placeholder="Repeat password" required/>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create Account →</button>
+  </form>
+
+  <div class="divider">or</div>
+  <p class="text-center text-sm text-muted">
+    Already have an account?
+    <a class="link" href="{{ url_for('login') }}">Sign in</a>
+  </p>
+</div>
+
+<script>
+function checkStrength(p) {
+  let score = 0;
+  if (p.length >= 8)  score++;
+  if (p.length >= 12) score++;
+  if (/[A-Z]/.test(p)) score++;
+  if (/[0-9]/.test(p)) score++;
+  if (/[^a-zA-Z0-9]/.test(p)) score++;
+
+  const bar  = document.getElementById('sbar');
+  const txt  = document.getElementById('stxt');
+  const map  = [
+    [0,   '#ef4444', 'Too weak'],
+    [20,  '#ef4444', 'Weak'],
+    [40,  '#f59e0b', 'Fair'],
+    [60,  '#f59e0b', 'Good'],
+    [80,  '#10b981', 'Strong'],
+    [100, '#10b981', 'Very strong'],
+  ];
+  const [w, col, label] = map[Math.min(score, map.length-1)];
+  bar.style.width      = (score * 20) + '%';
+  bar.style.background = col;
+  txt.textContent      = label;
+  txt.style.color      = col;
+}
+</script>
+{% endblock %}

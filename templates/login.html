@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Login — SecureLogin{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <span class="card-icon">🔐</span>
+    <h1 class="card-title">Welcome Back</h1>
+    <p class="card-sub">5 failed attempts = 15 min lockout</p>
+  </div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="alerts">
+        {% for cat, msg in messages %}
+          <div class="alert alert-{{ cat }}">
+            {{ '✗' if cat == 'error' else '✓' }} {{ msg }}
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <form method="POST" action="{{ url_for('login') }}">
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username"
+             placeholder="Your username" required autofocus/>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password"
+             placeholder="Your password" required/>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Sign In →</button>
+  </form>
+
+  <div class="divider">or</div>
+  <p class="text-center text-sm text-muted">
+    No account yet?
+    <a class="link" href="{{ url_for('register') }}">Create one</a>
+  </p>
+</div>
+{% endblock %}

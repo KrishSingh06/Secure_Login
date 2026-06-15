@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Verify 2FA — SecureLogin{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <span class="card-icon">🔑</span>
+    <h1 class="card-title">2FA Verification</h1>
+    <p class="card-sub">Enter the 6-digit code from your authenticator app</p>
+  </div>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="alerts">
+        {% for cat, msg in messages %}
+          <div class="alert alert-{{ cat }}">{{ msg }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <form method="POST" action="{{ url_for('verify_2fa') }}">
+    <div class="form-group">
+      <label for="code">Authentication Code</label>
+      <input type="number" id="code" name="code"
+             class="otp-input"
+             placeholder="000000"
+             minlength="6" maxlength="6"
+             required autofocus/>
+    </div>
+    <button type="submit" class="btn btn-primary">Verify →</button>
+  </form>
+
+  <div class="mt-2 text-center">
+    <a href="{{ url_for('login') }}" class="link text-sm">← Back to Login</a>
+  </div>
+</div>
+{% endblock %}
