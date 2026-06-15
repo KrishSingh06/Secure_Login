@@ -1,10 +1,10 @@
-# 🔐 Secure Login System
+#  Secure Login System
 
 A full-stack secure web application built with Flask featuring bcrypt password hashing, SQL injection protection, session management, and optional TOTP-based Two-Factor Authentication.
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 - [Features](#features)
 - [Project Structure](#project-structure)
 - [Installation](#installation)
@@ -16,7 +16,7 @@ A full-stack secure web application built with Flask featuring bcrypt password h
 
 ---
 
-## ✅ Features
+## Features
 
 - **User Registration** with real-time password strength meter
 - **bcrypt Password Hashing** with cost factor 12 (never stored as plain text)
@@ -30,7 +30,7 @@ A full-stack secure web application built with Flask featuring bcrypt password h
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 secure-login/
@@ -49,7 +49,7 @@ secure-login/
 
 ---
 
-## ⚙️ Installation
+## Installation
 
 **Step 1 — Clone the repository**
 ```bash
@@ -64,7 +64,7 @@ pip install -r requirements.txt
 
 ---
 
-## 🚀 How to Run
+## How to Run
 
 ```bash
 python3 app.py
@@ -79,7 +79,7 @@ The SQLite database (`users.db`) is created automatically on first run.
 
 ---
 
-## 🛡️ Security Features Explained
+## Security Features Explained
 
 ### 1. bcrypt Password Hashing
 Passwords are never stored as plain text. bcrypt adds a random salt and runs 2^12 (4096) hashing rounds:
@@ -122,7 +122,7 @@ Uses RFC 6238 Time-based One-Time Passwords:
 
 ---
 
-## 📄 Pages
+## Pages
 
 | Page | URL | Description |
 |---|---|---|
@@ -135,7 +135,7 @@ Uses RFC 6238 Time-based One-Time Passwords:
 
 ---
 
-## 🛠️ Technologies Used
+## Technologies Used
 
 | Tool | Purpose |
 |---|---|
@@ -148,7 +148,7 @@ Uses RFC 6238 Time-based One-Time Passwords:
 
 ---
 
-## 📚 Learning Outcomes
+## Learning Outcomes
 
 - How bcrypt salting and hashing protects passwords
 - Why parameterised queries prevent SQL injection
@@ -159,15 +159,7 @@ Uses RFC 6238 Time-based One-Time Passwords:
 
 ---
 
-## ⚠️ Note
 
-This is an educational project. For production use, add:
-- HTTPS (SSL certificate)
-- CSRF protection (flask-wtf)
-- Email verification on registration
-- Password reset flow
-
----
 
 ## 👨‍💻 Author
 
